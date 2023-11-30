@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="output.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Login</title>
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+  <div class="border border-gray-300 p-6 rounded-lg shadow-2xl w-96">
+    <h1 class="text-2xl font-semibold mb-4 text-center">Login</h1>
+    <form action="/signup" method="POST">
+      <div class="m-2 py-6">
+        <div class="flex mb-4">
+            <label name="username" for="userId" class="pr-2 mt-2">Username</label>
+            <input type="text" name="username" placeholder="username" id="userId"  class="flex-1 rounded-md px-4 py-2 border border-gray-700 text-gray-800">
+        </div>
+        <div class="flex">
+            <label name="password" for="'userPassword" class="pr-3 mt-2">Password</label>
+            <input type="password" name="password" placeholder="password" id="userPassword" class="flex-1 rounded-md px-4 py-2 border border-gray-700 text-gray-800">
+        </div>
+      </div>
+      <div class="pb-8">
+        <a id="sign" class="rounded-md ml-32 px-4 py-2 bg-blue-500 border border-gray-700 text-white" href="/todo">SignIn</a>
+      </div>
+      <div>
+        <a class="rounded-md ml-20 px-4 py-2 bg-blue-500 border border-gray-700 text-white mt-10" href="/auth/google">Continue with Google</a>
+      </div>
+    </form>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function (){
+      const myName=document.querySelector("#userId");
+      const myPassword=document.querySelector("#userPassword");
+      const signInButton = document.querySelector('#sign');
+      signInButton.addEventListener("click",async()=>{
+        var obj={
+          username:myName.value,
+          password:myPassword.value
+        };
+
+        try{
+        const response=await fetch("/signup",{
+          method:"POST",
+          headers:{
+            "Content-type":"application/json"
+          },
+          body:JSON.stringify(obj)
+        });
+
+        if(response.ok){
+          window.location.href="/protected";
+        } else {
+          console.error("Signin failed");
+        }
+      }
+      catch(error){
+        console.error(error);
+      }
+      });
+    });
+  </script>
+</body>
+</html>

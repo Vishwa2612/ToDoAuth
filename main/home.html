@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="output.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Todo-List</title>
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+  <div class="border border-gray-300 p-6 rounded-lg shadow-2xl w-96">
+    <h1 class="text-2xl font-semibold mb-4 text-center">Todo List</h1>
+    <div class="flex">
+      <input type="text" name="task" placeholder="Enter Task" id="newTodo" class="flex-1 rounded-l-md px-4 py-2 border border-gray-700 text-gray-800">
+      <button id="addTodo" class="rounded-r-md px-4 py-2 bg-blue-500 border border-gray-700 text-white">Add</button>
+    </div>
+    <div id="todoList" class="mb-2 mt-2"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const todoListContainer = document.querySelector('#todoList');
+    const newTodoInput = document.querySelector('#newTodo');
+    const addTodoButton = document.querySelector('#addTodo');
+  
+    
+    addTodoButton.addEventListener('click', function () {
+      const todoText = newTodoInput.value;
+      if (todoText !== '') {
+        addTodoToList(todoText);
+        newTodoInput.value = '';
+      }
+    });
+    
+    function addTodoToList(todoText) {
+      fetch('/task',{
+        method:"POST",
+        headers:{
+          "Content-type":"application/json"
+        },
+        body:JSON.stringify({task:todoText})
+      });
+      const todoItem = document.createElement('div');
+      todoItem.className = 'flex justify-between items-center border border-gray-400 rounded-md p-2 mt-2';
+
+      const todoTextElement = document.createElement('span');
+      todoTextElement.textContent = todoText;
+      todoTextElement.className = 'text-zinc-800';
+
+      const deleteButton = document.createElement('button');
+      const deleteImage = document.createElement('img');
+      const link = document.createElement('a');
+      link.href = '#';
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', '16');
+      svg.setAttribute('height', '16');
+      svg.setAttribute('viewBox', '0 0 16 16');
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', 'M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm3.72 10.72c.39.39.39 1.02 0 1.41-.2.20-.45.29-.7.29s-.5-.10-.7-.29L8 9.41l-2.29 2.30c-.2.20-.45.29-.7.29s-.5-.10-.7-.29c-.39-.39-.39-1.02 0-1.41L6.59 8 4.3 5.71c-.39-.39-.39-1.02 0-1.41s1.02-.39 1.41 0L8 6.59l2.29-2.30c.39-.39 1.02-.39 1.41 0s.39 1.02 0 1.41L9.41 8l2.29 2.29z');
+      svg.appendChild(path);
+      link.appendChild(svg);
+      deleteButton.appendChild(link);
+
+      deleteButton.addEventListener('click', function () {
+        todoItem.remove();
+      });
+
+      todoItem.appendChild(todoTextElement);
+      todoItem.appendChild(deleteButton);
+  
+      todoListContainer.appendChild(todoItem);
+    }
+  });
+  </script>
+
+</body>
+</html>
